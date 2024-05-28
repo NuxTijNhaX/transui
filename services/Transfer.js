@@ -190,7 +190,7 @@ export default class Transfer {
 
     txb.mergeCoins(destination, source);
 
-    suiClient
+    await suiClient
       .signAndExecuteTransactionBlock({
         signer: derivePrivateKey(wallet),
         transactionBlock: txb,
