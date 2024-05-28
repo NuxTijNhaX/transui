@@ -147,7 +147,6 @@ export default class Transfer {
     for (let index = 0; index < wallets.length; index++) {
       const wallet = wallets[index];
 
-      await this.#reverseGas(wallet);
       await this.#mergeAll(wallet, coinType);
       await this.transferObj(wallet, coinType, amount);
     }
@@ -165,6 +164,10 @@ export default class Transfer {
   }
 
   async #mergeAll(wallet, coinType) {
+    if (coinType === "SUI") {
+      await this.#reverseGas(wallet);
+    }
+
     console.log(
       `Merging ${coinType} - Wallet: ${derivePrivateKey(wallet).toSuiAddress()}`
     );
