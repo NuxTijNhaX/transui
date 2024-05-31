@@ -144,12 +144,15 @@ export default class Transfer {
   async manyToOne(coinType = CONTRACTS.SUI.name, { amount }) {
     const wallets = await this.#getWallets();
 
-    for (let index = 0; index < wallets.length; index++) {
-      const wallet = wallets[index];
-
+    const mergeTasks = wallets.map(async (wallet) => {
       await this.#mergeAll(wallet, coinType);
+    });
+    await Promise.allSettled(mergeTasks);
+
+    const transferTasks = wallets.map(async (wallet) => {
       await this.transferObj(wallet, coinType, amount);
-    }
+    });
+    await Promise.allSettled(transferTasks);
 
     logPitchTalk();
   }
